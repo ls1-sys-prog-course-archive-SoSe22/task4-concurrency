@@ -1,24 +1,31 @@
-#include<stdio.h>
-
 #define PAD 64
 
+/*
+Hashmap: list of buckets
+bucket1 -> sentinel -> node1 -> node2 -> NULL
+bucket2 -> sentinel -> node3 -> NULL
+...
+bucketN -> sentinel -> NULL
+*/
+
+//define a node in the hashmap
 typedef struct Node_HM_t
 {
-	long m_val;
+	long m_val; //value of the node
 	char padding[PAD];
-	struct Node_HM_t* m_next;
+	struct Node_HM_t* m_next; //pointer to next node in the bucket
 } Node_HM;
 
+//defining a bucket in the hashmap
 typedef struct List_t
 {
-	volatile int lock;
-	Node_HM* sentinel;
+	Node_HM* sentinel; //list of nodes in a bucket
 } List;
 
+//defining the hashmap
 typedef struct hm_t
 {
-	int n_buckets;
-	List** buckets;
+	List** buckets; //list of buckets in the hashmap
 } HM;
 
 
