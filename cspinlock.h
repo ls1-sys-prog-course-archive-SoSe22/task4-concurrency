@@ -1,13 +1,15 @@
-struct cspinlock;
+typedef struct cspinlock{
+	//define your locking structure here
+} cspinlock_t;
 
 //acquire the lock
-int cspin_lock(struct cspinlock* slock);
+extern int cspin_lock(cspinlock_t *slock);
 
 //if the lock can not be acquired, return immediately
-int cspin_trylock(struct cspinlock* slock);
+extern int cspin_trylock(cspinlock_t *slock);
 
 //release the lock
-int cspin_unlock(struct cspinlock* slock);
+extern int cspin_unlock(cspinlock_t *slock);
 
 //initialize the lock
-int cspin_init(struct cspinlock* slock);
+extern int cspin_init(cspinlock_t *slock);
