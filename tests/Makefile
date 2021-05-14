@@ -7,36 +7,35 @@ HEADERS := ${ROOT_DIR}/../
 CFLAGS += -I$(HEADERS)
 CPPFLAGS += $(CFLAGS)
 
-check: ${ROOT_DIR}/test_mutual_exclusion ${ROOT_DIR}/lock_hashmap \
-	${ROOT_DIR}/lockfree_hashmap
+PROG1 := ${ROOT_DIR}/test_mutual_exclusion
+PROG2 := ${ROOT_DIR}/lock_hashmap
+PROG3 := ${ROOT_DIR}/lockfree_hashmap
+
+OBJS := ${SRCS:.c=.o}
+
+LIBS1 = $(LIBS) -L ${ROOT_DIR}/../ -lcspinlock
+LIBS2 = $(LIBS) -L ${ROOT_DIR}/../ -llockhashmap
+LIBS3 = $(LIBS) -L ${ROOT_DIR}/../ -llockfreehashmap
+
+all: $(PROG1) $(PROG2) $(PROG3)
+
+check: $(PROG1) $(PROG2) $(PROG3)
 	$(PYTHON3) ${ROOT_DIR}/test_mutual_exclusion.py
 	$(PYTHON3) ${ROOT_DIR}/test_lockhashmap.py
 	$(PYTHON3) ${ROOT_DIR}/test_lockfreehashmap.py
 
-${ROOT_DIR}/test_mutual_exclusion: ${ROOT_DIR}/test_mutual_exclusion.c
-	$(CC) -I ${ROOT_DIR}/.. -Og -g -pthread -o $@ $< -L ${ROOT_DIR}/../ -lcspinlock
+$(PROG1): ${ROOT_DIR}/test_mutual_exclusion.c
+	$(CC) $(CFLAGS) -Og -g -pthread -o $@ $< $(LIBS1)
+
+SRCS = \
+        ${ROOT_DIR}/hashmap-driver.c \
+        ${ROOT_DIR}/thread.c
+
+$(PROG2): $(SRCS)
+	$(CC) $(CFLAGS) -Og -g -pthread -o $@ $(SRCS) $(LIBS2)
+
+$(PROG3): $(SRCS)
+	$(CC) $(CFLAGS) -Og -g -pthread -o $@ $(SRCS) $(LIBS3)
 
 clean:
-	rm *.o test_mutual_exclusion lock_hashmap
-
-
-PROG1 := ${ROOT_DIR}/lock_hashmap
-PROG2 := ${ROOT_DIR}/lockfree_hashmap
-
-LIBS1 += -lpthread -L ${ROOT_DIR}/../ -llockhashmap
-LIBS2 += -lpthread -L ${ROOT_DIR}/../ -llockfreehashmap
-
-SRCS += \
-	${ROOT_DIR}/hashmap-driver.c \
-	${ROOT_DIR}/thread.c
-
-OBJS := ${SRCS:.c=.o}
-
-%.o: %.c *.h
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(PROG1): $(OBJS)
-	$(LD) $(LDFLAGS) $^ $(LIBS1) -o $(PROG1)
-
-$(PROG2): $(OBJS)
-	$(LD) $(LDFLAGS) $^ $(LIBS2) -o $(PROG2)
+	$(RM) $(OBJS) $(PROG1) $(PROG2) $(PROG3)

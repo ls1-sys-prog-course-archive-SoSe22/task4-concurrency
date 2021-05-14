@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 volatile int counter;
-cspinlock slock;
+cspinlock_t slock;
 
 void* work1(){
 	cspin_lock(&slock);
