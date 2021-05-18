@@ -11,6 +11,8 @@ def main() -> None:
     lib = ensure_library("liblockhashmap.so")
     extra_env={"LD_LIBRARY_PATH": str(os.path.dirname(lib))}
     test_lock_hashmap = test_root().joinpath("lock_hashmap")
+    if not test_lock_hashmap.exists():
+        run(["make", "-C", str(test_root()), str(test_lock_hashmap)])
     times = []
     with tempfile.TemporaryDirectory() as tmpdir:
         with subtest("Checking correctness"):
