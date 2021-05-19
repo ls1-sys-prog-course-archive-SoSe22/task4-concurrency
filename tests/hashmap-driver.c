@@ -178,6 +178,11 @@ int main(int argc, char *argv[]) {
 
 	hm = alloc_hashmap(n_buckets);
 
+	if (!hm) {
+		fprintf(stderr, "hash map could not be allocated\n");
+		exit(1);
+	}
+
 
 	for (i = 0; i < initial; i++) {
 		val = (rand() % range) + 1;
@@ -188,8 +193,16 @@ int main(int argc, char *argv[]) {
 	for (i = 0; i < 10; i++) {
 		int index = rand() % initial;
 		long tmp = inserted_vals[index];
-		assert(lookup_item(hm, tmp) == 0);
-		assert(lookup_item(hm, tmp + range + 10) != 0);
+		if (lookup_item(hm, tmp) == 1) {
+			free_hashmap(hm);
+			fprintf(stderr, "Expected key %d to exists in hash map\n", tmp);
+			exit(1);
+		}
+		if (lookup_item(hm, tmp + range + 10) == 0) {
+			free_hashmap(hm);
+			fprintf(stderr, "Expected key %d not to exists in hash map\n", tmp);
+			exit(1);
+		}
 	}
 
 	//print_hashmap(hm);
