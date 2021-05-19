@@ -13,9 +13,11 @@ PROG3 := ${ROOT_DIR}/lockfree_hashmap
 
 OBJS := ${SRCS:.c=.o}
 
-LIBS1 = $(LIBS) -L ${ROOT_DIR}/../ -lcspinlock
-LIBS2 = $(LIBS) -L ${ROOT_DIR}/../ -llockhashmap
-LIBS3 = $(LIBS) -L ${ROOT_DIR}/../ -llockfreehashmap
+LIBS = -Wl,-rpath,${ROOT_DIR}/.. -L ${ROOT_DIR}/.. -Wl,-rpath,${ROOT_DIR}/../target/release -L ${ROOT_DIR}/../target/release -Wl,-rpath,${ROOT_DIR}/../target/debug -L ${ROOT_DIR}/../target/debug
+
+LIBS1 = $(LIBS) -lcspinlock
+LIBS2 = $(LIBS) -llockhashmap
+LIBS3 = $(LIBS) -llockfreehashmap
 
 all: $(PROG1) $(PROG2) $(PROG3)
 
