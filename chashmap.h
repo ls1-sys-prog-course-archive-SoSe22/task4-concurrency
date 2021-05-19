@@ -9,25 +9,29 @@ bucketN -> sentinel -> NULL
 */
 
 //define a node in the hashmap
-typedef struct Node_HM_t
+/*typedef struct Node_HM_t
 {
 	long m_val; //value of the node
 	char padding[PAD];
 	struct Node_HM_t* m_next; //pointer to next node in the bucket
-} Node_HM;
+} Node_HM;*/
+typedef struct Node_HM_t Node_HM;
 
-//defining a bucket in the hashmap
+/*defining a bucket in the hashmap
 typedef struct List_t
 {
 	Node_HM* sentinel; //list of nodes in a bucket
 } List;
+*/
+typedef struct List_t List;
 
-//defining the hashmap
+/*defining the hashmap
 typedef struct hm_t
 {
-	List** buckets; //list of buckets in the hashmap
+        List** buckets; //list of buckets in the hashmap
 } HM;
-
+*/
+typedef struct hm_t HM;
 
 //initialize the hashamp with given number of buckets
 HM* create_hashmap(int n_buckets);

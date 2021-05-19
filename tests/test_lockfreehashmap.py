@@ -79,7 +79,7 @@ def main() -> None:
                     exit(1)
     f1 = times[0] / times[1]
     f2 = times[1] / times[2]
-    if (f1 < 1.5 or  f1 > 2 or f2 < 1.5 or f2 > 2):
+    if (f1 < 1.4 or  f1 > 2.2 or f2 < 1.4 or f2 > 2.2):
         warn("Hashmap is not scaling properly: " + str(times))
         exit(1)
 

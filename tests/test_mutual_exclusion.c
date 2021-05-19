@@ -1,33 +1,34 @@
 #include <pthread.h>
-#include "cspinlock.h"
 #include <unistd.h>
 #include <assert.h>
 #include <stdio.h>
+#include "cspinlock.h"
 
 volatile int counter;
-cspinlock_t slock;
+cspinlock_t* slock;
 
 void* work1(){
-	cspin_lock(&slock);
+	cspin_lock(slock);
 	counter++;
 	sleep(1);
 	assert(counter==1);
-	cspin_unlock(&slock);
+	cspin_unlock(slock);
 	return NULL;
 }
 
 void* work2(){
 	while(counter == 0);
-	cspin_lock(&slock);
+	cspin_lock(slock);
 	counter++;
-	cspin_unlock(&slock);
+	cspin_unlock(slock);
 	return NULL;
 }
 
 int main() {
 	counter = 0;
-
-	cspin_init(&slock);
+	
+	slock = cspin_alloc();
+	cspin_init(slock);
 
 	pthread_t t1, t2;
 	pthread_create(&t1, NULL, work1, NULL);
