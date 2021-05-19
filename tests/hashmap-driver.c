@@ -193,12 +193,12 @@ int main(int argc, char *argv[]) {
 	for (i = 0; i < 10; i++) {
 		int index = rand() % initial;
 		long tmp = inserted_vals[index];
-		if (lookup_item(hm, tmp) == 1) {
+		if (lookup_item(hm, tmp) != 0) {
 			free_hashmap(hm);
 			fprintf(stderr, "Expected key %d to exists in hash map\n", tmp);
 			exit(1);
 		}
-		if (lookup_item(hm, tmp + range + 10) == 0) {
+		if (lookup_item(hm, tmp + range + 10) != 1) {
 			free_hashmap(hm);
 			fprintf(stderr, "Expected key %d not to exists in hash map\n", tmp);
 			exit(1);
