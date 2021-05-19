@@ -45,7 +45,6 @@ def main() -> None:
                 run_project_executable(
                         str(test_lock_hashmap),
                         args=["-d2000000", "-i100000", "-n4", "-r100000", "-u10"],
-                        stderr=stderr,
                         stdout=stdout,
                         extra_env=extra_env
                         )
