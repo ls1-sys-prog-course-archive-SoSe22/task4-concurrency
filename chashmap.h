@@ -33,8 +33,11 @@ typedef struct hm_t
 */
 typedef struct hm_t HM;
 
-//initialize the hashamp with given number of buckets
-HM* create_hashmap(int n_buckets);
+//allocate a hashmap with given number of buckets
+HM* alloc_hashmap(int n_buckets);
+
+//free a hashamp
+void free_hashmap(HM* hm);
 
 //insert val into the hm and return 0 if successful
 int insert_item(HM* hm, long val);
@@ -42,7 +45,7 @@ int insert_item(HM* hm, long val);
 //remove val from the hm, if it exist and return 0 if successful
 int remove_item(HM* hm, long val);
 
-//check if val exists in hm, return 0 if found
+//check if val exists in hm, return 0 if found, return 1 otherwise
 int lookup_item(HM* hm, long val);
 
 //print all elements in the hashmap as follows:

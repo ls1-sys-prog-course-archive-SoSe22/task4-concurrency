@@ -8,75 +8,39 @@ from testsupport import run, subtest, warn, test_root, run_project_executable, e
 
 def main() -> None:
     # Run the test program
-    lib = ensure_library("liblockfreehashmap.so")
-    extra_env={"LD_LIBRARY_PATH": str(os.path.dirname(lib))}
     test_lock_hashmap = test_root().joinpath("lockfree_hashmap")
     if not test_lock_hashmap.exists():
         run(["make", "-C", str(test_root()), str(test_lock_hashmap)])
     times = []
     with tempfile.TemporaryDirectory() as tmpdir:
         with subtest("Checking correctness"):
-             with open(f"{tmpdir}/stderr", "w+") as stderr, open(
-                    f"{tmpdir}/stdout", "w+"
-                ) as stdout:
+            with open(f"{tmpdir}/stdout", "w+") as stdout:
                 run_project_executable(
                         str(test_lock_hashmap),
                         args=["-d20000", "-i10000", "-n4", "-r10000", "-u100", "-b1"],
-                        stderr=stderr,
-                        stdout=stdout,
-                        extra_env=extra_env
-                        )
-                if os.stat(f"{tmpdir}/stderr").st_size > 0:
-                    warn("Test failed with error")
-                    exit(1)
+                        stdout=stdout)
         with subtest("Checking 1 thread time"):
-             with open(f"{tmpdir}/stderr", "w+") as stderr, open(
-                    f"{tmpdir}/stdout", "w+"
-                ) as stdout:
+            with open(f"{tmpdir}/stdout", "w+") as stdout:
                 run_project_executable(
                         str(test_lock_hashmap),
                         args=["-d20000", "-i10000", "-n1", "-r10000", "-u10", "-b1"],
-                        stderr=stderr,
-                        stdout=stdout,
-                        extra_env=extra_env
-                        )
-                if os.stat(f"{tmpdir}/stdout").st_size > 0:
-                    times.append(float(open(f"{tmpdir}/stdout").readlines()[0].strip()))
-                if os.stat(f"{tmpdir}/stderr").st_size > 0:
-                    warn("Test failed with error")
-                    exit(1)
+                        stdout=stdout)
+                times.append(float(open(f"{tmpdir}/stdout").readlines()[0].strip()))
         with subtest("Checking 2 thread time"):
-             with open(f"{tmpdir}/stderr", "w+") as stderr, open(
-                    f"{tmpdir}/stdout", "w+"
-                ) as stdout:
+            with open(f"{tmpdir}/stdout", "w+") as stdout:
                 run_project_executable(
                         str(test_lock_hashmap),
                         args=["-d20000", "-i10000", "-n2", "-r10000", "-u10", "-b1"],
-                        stderr=stderr,
-                        stdout=stdout,
-                        extra_env=extra_env
-                        )
-                if os.stat(f"{tmpdir}/stdout").st_size > 0:
-                    times.append(float(open(f"{tmpdir}/stdout").readlines()[0].strip()))
-                if os.stat(f"{tmpdir}/stderr").st_size > 0:
-                    warn("Test failed with error")
-                    exit(1)
+                        stdout=stdout)
+                times.append(float(open(f"{tmpdir}/stdout").readlines()[0].strip()))
         with subtest("Checking 4 thread time"):
-             with open(f"{tmpdir}/stderr", "w+") as stderr, open(
-                    f"{tmpdir}/stdout", "w+"
-                ) as stdout:
+            with open(f"{tmpdir}/stdout", "w+") as stdout:
                 run_project_executable(
                         str(test_lock_hashmap),
                         args=["-d20000", "-i10000", "-n4", "-r10000", "-u10", "-b1"],
-                        stderr=stderr,
-                        stdout=stdout,
-                        extra_env=extra_env
+                        stdout=stdout
                         )
-                if os.stat(f"{tmpdir}/stdout").st_size > 0:
-                    times.append(float(open(f"{tmpdir}/stdout").readlines()[0].strip()))
-                if os.stat(f"{tmpdir}/stderr").st_size > 0:
-                    warn("Test failed with error")
-                    exit(1)
+                times.append(float(open(f"{tmpdir}/stdout").readlines()[0].strip()))
     f1 = times[0] / times[1]
     f2 = times[1] / times[2]
     if (f1 < 1.4 or  f1 > 2.2 or f2 < 1.4 or f2 > 2.2):
