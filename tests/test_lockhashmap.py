@@ -24,31 +24,40 @@ def main() -> None:
                         )
         with subtest("Checking 1 thread time"):
             with open(f"{tmpdir}/stdout", "w+") as stdout:
-                run_project_executable(
-                        str(test_lock_hashmap),
-                        args=["-d2000000", "-i100000", "-n1", "-r100000", "-u10"],
-                        stdout=stdout,
-                        extra_env=extra_env
-                        )
-                times.append(float(open(f"{tmpdir}/stdout").readlines()[0].strip()))
+                runtime = 0.0
+                for i in range(0,3):
+                    run_project_executable(
+                            str(test_lock_hashmap),
+                            args=["-d2000000", "-i100000", "-n1", "-r100000", "-u10"],
+                            stdout=stdout,
+                            extra_env=extra_env
+                            )
+                    runtime += float(open(f"{tmpdir}/stdout").readlines()[0].strip())
+                times.append(runtime/3)
         with subtest("Checking 2 thread time"):
             with open(f"{tmpdir}/stdout", "w+") as stdout:
-                run_project_executable(
-                        str(test_lock_hashmap),
-                        args=["-d2000000", "-i100000", "-n2", "-r100000", "-u10"],
-                        stdout=stdout,
-                        extra_env=extra_env
-                        )
-                times.append(float(open(f"{tmpdir}/stdout").readlines()[0].strip()))
+                runtime = 0.0
+                for i in range(0,3):
+                    run_project_executable(
+                            str(test_lock_hashmap),
+                            args=["-d2000000", "-i100000", "-n2", "-r100000", "-u10"],
+                            stdout=stdout,
+                            extra_env=extra_env
+                            )
+                    runtime += float(open(f"{tmpdir}/stdout").readlines()[0].strip())
+                times.append(runtime/3)
         with subtest("Checking 4 thread time"):
             with open(f"{tmpdir}/stdout", "w+") as stdout:
-                run_project_executable(
-                        str(test_lock_hashmap),
-                        args=["-d2000000", "-i100000", "-n4", "-r100000", "-u10"],
-                        stdout=stdout,
-                        extra_env=extra_env
-                        )
-                times.append(float(open(f"{tmpdir}/stdout").readlines()[0].strip()))
+                runtime = 0.0
+                for i in range(0,3):
+                    run_project_executable(
+                            str(test_lock_hashmap),
+                            args=["-d2000000", "-i100000", "-n4", "-r100000", "-u10"],
+                            stdout=stdout,
+                            extra_env=extra_env
+                            )
+                    runtime += float(open(f"{tmpdir}/stdout").readlines()[0].strip())
+                times.append(runtime/3)
     f1 = times[0] / times[1]
     f2 = times[1] / times[2]
     if (f1 < 1.4 or  f1 > 2.2 or f2 < 1.4 or f2 > 2.2):

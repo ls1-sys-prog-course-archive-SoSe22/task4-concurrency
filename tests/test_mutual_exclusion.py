@@ -15,7 +15,6 @@ from testsupport import (
 
 def main() -> None:
     # Run the test program
-    #ensure_library("libcspinlock.d")
     test_mutual_exclusion = test_root().joinpath("test_mutual_exclusion")
     if not test_mutual_exclusion.exists():
         run(["make", "-C", str(test_root()), str(test_mutual_exclusion)])
