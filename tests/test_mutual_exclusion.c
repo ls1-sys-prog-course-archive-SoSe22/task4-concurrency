@@ -7,16 +7,18 @@
 volatile int counter;
 cspinlock_t* slock;
 
-void* work1(){
+void* work1(void* _arg) {
 	cspin_lock(slock);
 	counter++;
-	sleep(1);
-	assert(counter==1);
+	usleep(100);
+	if (counter != 1) {
+		exit(1);
+	}
 	cspin_unlock(slock);
 	return NULL;
 }
 
-void* work2(){
+void* work2(void* _arg){
 	while(counter == 0);
 	cspin_lock(slock);
 	counter++;
@@ -24,17 +26,25 @@ void* work2(){
 	return NULL;
 }
 
-int main() {
+int main(void) {
 	counter = 0;
 	
 	slock = cspin_alloc();
-	cspin_init(slock);
+	if (!slock) {
+		fprintf(stderr, "could not allocate memory\n");
+		return 1;
+	}
 
 	pthread_t t1, t2;
-	pthread_create(&t1, NULL, work1, NULL);
-	pthread_create(&t2, NULL, work2, NULL);
-	pthread_join(t1, NULL);
-	pthread_join(t2, NULL);
+	for (size_t i = 0; i < 10; i++) {
+		counter = 0;
+		pthread_create(&t1, NULL, work1, NULL);
+		pthread_create(&t2, NULL, work2, NULL);
+		pthread_join(t1, NULL);
+		pthread_join(t2, NULL);
+	}
+
+	cspin_free(slock);
 
 	return 0;
 }
