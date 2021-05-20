@@ -34,7 +34,7 @@ typedef struct hm_t
 typedef struct hm_t HM;
 
 //allocate a hashmap with given number of buckets
-HM* alloc_hashmap(int n_buckets);
+HM* alloc_hashmap(size_t n_buckets);
 
 //free a hashamp
 void free_hashmap(HM* hm);
