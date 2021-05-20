@@ -12,18 +12,27 @@ all:
 	@echo "Please set a concrete build command here"
 	false
 
-# C example:
-#all:
-#	$(CC) $(CFLAGS) -o task-name task-name.c
+.PHONY: all clean check
 
-# C++ example:
+## Rust Example
 #all:
-#	$(CXX) $(CXXFLAGS) -o task-name task-name.cpp
+#	cargo build
 
-# Rust example:
-#all:
-#	$(CARGO) build --release
+## C/C++ example
+#all: libcspinlock.so liblockhashmap.so liblockfreehashmap.so
+#libcspinlock.so: cspinlock.c
+#	$(CC) $(CFLAGS) -shared -fPIC -ldl -o $@ $<
+#
+#liblockhashmap.so: lockhashmap.c
+#	$(CC) $(CFLAGS) -shared -fPIC -ldl -o $@ $<
+#
+#liblockfreehashmap.so: lockfreehashmap.c
+#	$(CC) $(CFLAGS) -shared -fPIC -ldl -o $@ $<
 
 # Usually there is no need to modify this
 check: all
 	$(MAKE) -C tests check
+
+clean:
+	$(MAKE) -C tests clean
+	rm -rf *.so* *.o
