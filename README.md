@@ -8,7 +8,14 @@ This week you will implement a simple locking construct by relying only on primi
 2. Implement a lock-based hashmap datastructure that is declared in `chashmap.h` to generate a library called `liblockhashmap.so`.
 3. Implement a lock-free hashmap datastructure that is declared in `chashmap.h` to generate a library called `liblockfreehashmap.so`. For this task, 
 
-**NB:** For tasks 1 and 3, only atomic primitives (e.g., compare-and-swap, atomic fetch-and-increment, etc.) are allowed. No synchronization library can be used.
+**NB:** For tasks 1 and 3, only atomic primitives (e.g., compare-and-swap, atomic fetch-and-increment, etc.) are allowed. No synchronization library can be used (on Rust you can use `std::sync::atomic`).
+
+### Tipp for Rust
+
+You allocate datastructures via
+[Box](https://doc.rust-lang.org/std/boxed/struct.Box.html) and cast those
+to/from raw pointer when implementing the alloc/free functions required by the
+`chashmap` and `cspinlock` interface.
 
 ## Test Setup
 There are three tests that needs to be passed to complete this task successfully.
