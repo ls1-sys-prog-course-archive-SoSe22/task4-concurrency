@@ -6,11 +6,11 @@ This week you will implement a simple locking construct by relying only on primi
 ## Deliverables
 1. Implement the spinlock that is declared in `cspinlock.h` to generate a library called `libcspinlock.so`. 
 2. Implement a lock-based hashmap datastructure that is declared in `chashmap.h` to generate a library called `liblockhashmap.so`.
-3. Implement a lock-free hashmap datastructure that is declared in `chashmap.h` to generate a library called `liblockfreehashmap.so`. For this task, 
+3. Implement a lock-free hashmap datastructure that is declared in `chashmap.h` to generate a library called `liblockfreehashmap.so`. 
 
 **NB:** For tasks 1 and 3, only atomic primitives (e.g., compare-and-swap, atomic fetch-and-increment, etc.) are allowed. No synchronization library can be used (on Rust you can use `std::sync::atomic`).
 
-### Tipp for Rust
+### Tip for Rust
 
 You allocate datastructures via
 [Box](https://doc.rust-lang.org/std/boxed/struct.Box.html) and cast those
