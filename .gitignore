@@ -63,3 +63,7 @@ MANIFEST
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+tests/lock_hashmap
+tests/lockfree_hashmap
+tests/test_mutual_exclusion
