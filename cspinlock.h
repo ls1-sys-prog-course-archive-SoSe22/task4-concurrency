@@ -9,8 +9,8 @@ extern int cspin_trylock(cspinlock_t *slock);
 //release the lock
 extern int cspin_unlock(cspinlock_t *slock);
 
-//initialize the lock
-extern int cspin_init(cspinlock_t *slock);
-
 //allocate a lock
 extern cspinlock_t* cspin_alloc();
+
+//free a lock
+extern void cspin_free(cspinlock_t* slock);
