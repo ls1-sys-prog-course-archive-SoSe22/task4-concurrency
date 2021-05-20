@@ -40,9 +40,11 @@ HM* alloc_hashmap(int n_buckets);
 void free_hashmap(HM* hm);
 
 //insert val into the hm and return 0 if successful
+//return 1 otherwise, e.g., could not allocate memory
 int insert_item(HM* hm, long val);
 
 //remove val from the hm, if it exist and return 0 if successful
+//return 1 if item is not found
 int remove_item(HM* hm, long val);
 
 //check if val exists in hm, return 0 if found, return 1 otherwise
