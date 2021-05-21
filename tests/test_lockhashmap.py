@@ -12,6 +12,14 @@ from testsupport import (
     ensure_library,
 )
 
+def sanity_check(output, n_buckets, initial, n_threads):
+    count = 0
+    for i in range(0, n_buckets):
+        entries = output[i].split("-")
+        count += len(entries) - 1
+    if count > initial + n_threads:
+        warn("Hashmap has more items than expected ")
+        exit(1)
 
 def main() -> None:
     # Run the test program
@@ -29,6 +37,8 @@ def main() -> None:
                 stdout=stdout,
                 extra_env=extra_env,
             )
+            output = open(f"{tmpdir}/stdout").readlines()
+            sanity_check(output[1:], 1, 10000, 4)
         with subtest("Checking 1 thread time"):
             with open(f"{tmpdir}/stdout", "w+") as stdout:
                 runtime = 0.0
@@ -39,7 +49,9 @@ def main() -> None:
                         stdout=stdout,
                         extra_env=extra_env,
                     )
-                    runtime += float(open(f"{tmpdir}/stdout").readlines()[0].strip())
+                    output = open(f"{tmpdir}/stdout").readlines()
+                    runtime += float(output[0].strip())
+                    sanity_check(output[1:], 512, 100000, 1)
                 times.append(runtime / 3)
         with subtest("Checking 2 thread time"):
             with open(f"{tmpdir}/stdout", "w+") as stdout:
@@ -51,7 +63,9 @@ def main() -> None:
                         stdout=stdout,
                         extra_env=extra_env,
                     )
-                    runtime += float(open(f"{tmpdir}/stdout").readlines()[0].strip())
+                    output = open(f"{tmpdir}/stdout").readlines()
+                    runtime += float(output[0].strip())
+                    sanity_check(output[1:], 512, 100000, 2)
                 times.append(runtime / 3)
         with subtest("Checking 4 thread time"):
             with open(f"{tmpdir}/stdout", "w+") as stdout:
@@ -63,7 +77,9 @@ def main() -> None:
                         stdout=stdout,
                         extra_env=extra_env,
                     )
-                    runtime += float(open(f"{tmpdir}/stdout").readlines()[0].strip())
+                    output = open(f"{tmpdir}/stdout").readlines()
+                    runtime += float(output[0].strip())
+                    sanity_check(output[1:], 512, 100000, 4)
                 times.append(runtime / 3)
     f1 = times[0] / times[1]
     f2 = times[1] / times[2]

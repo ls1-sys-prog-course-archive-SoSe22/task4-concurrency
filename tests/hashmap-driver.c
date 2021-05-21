@@ -56,7 +56,11 @@ void *test(void *data)
 				}
 			} else {
 				/* Remove random value */
-				remove_item(hm, val);
+				int ret = remove_item(hm, val);
+				if(ret != 0){
+					fprintf(stderr, "hashmap did not remove a value that exists\n");
+					exit(1);
+				}
 				val = -1;
 			}
 		} else {
@@ -222,9 +226,8 @@ int main(int argc, char *argv[]) {
 
 	thread_shutdown();
 
+	print_hashmap(hm);
 	free_hashmap(hm);
-
-	//print_hashmap(hm);
 
 	return 0;
 }

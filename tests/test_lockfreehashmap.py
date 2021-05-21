@@ -27,6 +27,8 @@ def main() -> None:
                     args=["-d20000", "-i10000", "-n4", "-r10000", "-u100", "-b1"],
                     stdout=stdout,
                 )
+                output = open(f"{tmpdir}/stdout").readlines()
+                sanity_check(output[1:], 1, 10000, 4)
         with subtest("Checking 1 thread time"):
             with open(f"{tmpdir}/stdout", "w+") as stdout:
                 runtime = 0.0
@@ -36,7 +38,9 @@ def main() -> None:
                         args=["-d20000", "-i10000", "-n1", "-r10000", "-u10", "-b1"],
                         stdout=stdout,
                     )
-                    runtime += float(open(f"{tmpdir}/stdout").readlines()[0].strip())
+                    output = open(f"{tmpdir}/stdout").readlines()
+                    runtime += float(output[0].strip())
+                    sanity_check(output[1:], 1, 10000, 1)
                 times.append(runtime / 3)
         with subtest("Checking 2 thread time"):
             with open(f"{tmpdir}/stdout", "w+") as stdout:
@@ -47,7 +51,9 @@ def main() -> None:
                         args=["-d20000", "-i10000", "-n2", "-r10000", "-u10", "-b1"],
                         stdout=stdout,
                     )
-                    runtime += float(open(f"{tmpdir}/stdout").readlines()[0].strip())
+                    output = open(f"{tmpdir}/stdout").readlines()
+                    runtime += float(output[0].strip())
+                    sanity_check(output[1:], 1, 10000, 2)
                 times.append(runtime / 3)
         with subtest("Checking 4 thread time"):
             with open(f"{tmpdir}/stdout", "w+") as stdout:
@@ -58,7 +64,9 @@ def main() -> None:
                         args=["-d20000", "-i10000", "-n4", "-r10000", "-u10", "-b1"],
                         stdout=stdout,
                     )
-                    runtime += float(open(f"{tmpdir}/stdout").readlines()[0].strip())
+                    output = open(f"{tmpdir}/stdout").readlines()
+                    runtime += float(output[0].strip())
+                    sanity_check(output[1:], 1, 10000, 4)
                 times.append(runtime / 3)
     f1 = times[0] / times[1]
     f2 = times[1] / times[2]
