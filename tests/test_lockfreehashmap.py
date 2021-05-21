@@ -12,6 +12,14 @@ from testsupport import (
     ensure_library,
 )
 
+def sanity_check(output, n_buckets, initial, n_threads):
+    count = 0
+    for i in range(0, n_buckets):
+        entries = output[i].split("-")
+        count += len(entries) - 1
+    if count > initial + n_threads:
+        warn("Hashmap has more items than expected ")
+        exit(1)
 
 def main() -> None:
     # Run the test program
