@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "cspinlock.h"
 
 volatile int counter;
