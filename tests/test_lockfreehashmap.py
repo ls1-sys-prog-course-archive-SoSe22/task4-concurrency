@@ -76,11 +76,34 @@ def main() -> None:
                     runtime += float(output[0].strip())
                     sanity_check(output[1:], 1, 10000, 4)
                 times.append(runtime / 3)
-    f1 = times[0] / times[1]
-    f2 = times[1] / times[2]
-    if f1 < 1.4 or f2 < 1.4:
-        warn("Hashmap is not scaling properly: " + str(times))
-        exit(1)
+
+        f1 = times[0] / times[1]
+        f2 = times[1] / times[2]
+        if f1 < 1.4 or f2 < 1.4:
+            warn("Hashmap is not scaling properly: " + str(times))
+            exit(1)
+
+        with subtest("Checking if hashmap cleans up items when removing"):
+            test_cleanup_lockfree = test_root().joinpath("test_cleanup_lockfree")
+
+            if not test_cleanup_lockfree.exists():
+                run(["make", "-C", str(test_root()), str(test_cleanup_lockfree)])
+
+            with open(f"{tmpdir}/stdout", "w+") as stdout:
+                run_project_executable(
+                    str(test_cleanup_lockfree),
+                    stdout=stdout
+                )
+
+                stdout.seek(0)
+                lines = stdout.readlines()
+                first = float(lines[0])
+                second = float(lines[1])
+
+                if second / first > 1.5:
+                    warn(f"Hashmap does not cleanup properly when removing items: {first}, {second}")
+                    exit(1)
+                 
 
 
 if __name__ == "__main__":

@@ -67,3 +67,5 @@ dmypy.json
 tests/lock_hashmap
 tests/lockfree_hashmap
 tests/test_mutual_exclusion
+tests/test_cleanup_lock
+tests/test_cleanup_lockfree

@@ -10,6 +10,8 @@ CPPFLAGS += $(CFLAGS)
 PROG1 := ${ROOT_DIR}/test_mutual_exclusion
 PROG2 := ${ROOT_DIR}/lock_hashmap
 PROG3 := ${ROOT_DIR}/lockfree_hashmap
+PROG4 := ${ROOT_DIR}/test_cleanup_lock
+PROG5 := ${ROOT_DIR}/test_cleanup_lockfree
 
 OBJS := ${SRCS:.c=.o}
 
@@ -19,9 +21,9 @@ LIBS1 = $(LIBS) -lcspinlock
 LIBS2 = $(LIBS) -llockhashmap
 LIBS3 = $(LIBS) -llockfreehashmap
 
-all: $(PROG1) $(PROG2) $(PROG3)
+all: $(PROG1) $(PROG2) $(PROG3) $(PROG4) $(PROG5)
 
-check: $(PROG1) $(PROG2) $(PROG3)
+check: $(PROG1) $(PROG2) $(PROG3) $(PROG4) $(PROG5)
 	$(PYTHON3) ${ROOT_DIR}/test_mutual_exclusion.py
 	$(PYTHON3) ${ROOT_DIR}/test_lockhashmap.py
 	$(PYTHON3) ${ROOT_DIR}/test_lockfreehashmap.py
@@ -39,5 +41,11 @@ $(PROG2): $(SRCS)
 $(PROG3): $(SRCS)
 	$(CC) $(CFLAGS) -Og -g -pthread -o $@ $(SRCS) $(LIBS3)
 
+$(PROG4): ${ROOT_DIR}/test_cleanup.c
+	$(CC) $(CFLAGS) -Og -g -o $@ $< $(LIBS2)
+
+$(PROG5): ${ROOT_DIR}/test_cleanup.c
+	$(CC) $(CFLAGS) -Og -g -o $@ $< $(LIBS3)
+
 clean:
-	$(RM) $(OBJS) $(PROG1) $(PROG2) $(PROG3)
+	$(RM) $(OBJS) $(PROG1) $(PROG2) $(PROG3) $(PROG4) $(PROG5)
