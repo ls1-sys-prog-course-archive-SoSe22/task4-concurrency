@@ -1,9 +1,11 @@
 # Concurrent Programming
+
 This week you will implement a simple locking construct by relying only on primitive atomic operations. You will also implement a scalable, thread-safe concurrent data-structure. This will be achieved by following two different paths:
 1. using locks
 2. using a lock-free algorithm.
 
 ## Deliverables
+
 1. Implement the spinlock that is declared in `cspinlock.h` to generate a library called `libcspinlock.so`. 
 2. Implement a lock-based hashmap datastructure that is declared in `chashmap.h` to generate a library called `liblockhashmap.so`.
 3. Implement a lock-free hashmap datastructure that is declared in `chashmap.h` to generate a library called `liblockfreehashmap.so`. 
@@ -33,7 +35,11 @@ There are three tests that needs to be passed to complete this task successfully
 1. the concurrent hashmap is implemented correctly
 2. the hashmap scales with increasing number of threads in high contention workloads.
 
-**NB:** Both lock-based and lock-free hashmap tests rely on the `hashmap-driver.c` to execute a workload on the hashmap. You can check the usage of this code to test your own.
+## Hints
+
+- Both lock-based and lock-free hashmap tests rely on the `hashmap-driver.c` to execute a workload on the hashmap. You can check the usage of this code to test your own.
+- The hashmap does not need to check if an element is already in the hashmap before inserting
+- Inserts should be relatively fast (i.e. insert at the beginning of the bucket, not the end)
 
 ## Going further
 1. If you want to further develop your concurrent programming skills you can check other synchronization techniques such as Read-Copy-Update (RCU) and figure out how can the hashmap use RCU.  
