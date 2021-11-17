@@ -1,51 +1,66 @@
-#include <pthread.h>
-#include <unistd.h>
 #include <assert.h>
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+
 #include "cspinlock.h"
 
-volatile int counter;
-cspinlock_t* slock;
+const int NUM_THREADS = 4;
+const long ITERATIONS = 1000000;
 
-void* work1(void* _arg) {
-	cspin_lock(slock);
-	counter++;
-	usleep(100);
-	if (counter != 1) {
-		exit(1);
-	}
-	cspin_unlock(slock);
-	return NULL;
+volatile int go = 0;
+volatile long counter;
+
+cspinlock_t *slock;
+
+void *work(void *arg) {
+    while (!go) {
+    }
+
+    for (long i = 0; i < ITERATIONS; i++) {
+        cspin_lock(slock);
+        counter++;
+        cspin_unlock(slock);
+    }
+
+    return NULL;
 }
 
-void* work2(void* _arg){
-	while(counter == 0);
-	cspin_lock(slock);
-	counter++;
-	cspin_unlock(slock);
-	return NULL;
+void test() {
+    counter = 0;
+    go = 0;
+
+    pthread_t threads[NUM_THREADS];
+
+    for (size_t i = 0; i < NUM_THREADS; i++) {
+        pthread_create(&threads[i], NULL, work, NULL);
+    }
+
+    go = 1;
+
+    for (size_t i = 0; i < NUM_THREADS; i++) {
+        pthread_join(threads[i], NULL);
+    }
+
+    if (counter != NUM_THREADS * ITERATIONS) {
+        fprintf(stderr, "Mutual exclusion not working correctly\n");
+        exit(1);
+    }
 }
 
-int main(void) {
-	counter = 0;
-	
-	slock = cspin_alloc();
-	if (!slock) {
-		fprintf(stderr, "could not allocate memory\n");
-		return 1;
-	}
+int main() {
+    slock = cspin_alloc();
+    if (!slock) {
+        fprintf(stderr, "could not allocate memory\n");
+        exit(1);
+    }
 
-	pthread_t t1, t2;
-	for (size_t i = 0; i < 10; i++) {
-		counter = 0;
-		pthread_create(&t1, NULL, work1, NULL);
-		pthread_create(&t2, NULL, work2, NULL);
-		pthread_join(t1, NULL);
-		pthread_join(t2, NULL);
-	}
+    for (size_t i = 0; i < 10; i++) {
+        test();
+    }
 
-	cspin_free(slock);
+    cspin_free(slock);
 
-	return 0;
+    return 0;
 }
