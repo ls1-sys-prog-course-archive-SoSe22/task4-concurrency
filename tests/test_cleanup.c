@@ -34,11 +34,6 @@ void validate(HM *hm) {
         fprintf(stderr, "Hashmap did not remove item %d\n", num);
         exit(1);
     }
-
-    if (lookup_item(hm, num) == 0) {
-        fprintf(stderr, "Hashmap did not remove item %d\n", num);
-        exit(1);
-    }
 }
 
 /* Fill the hashmap with NUM_ITEMS */
@@ -59,7 +54,10 @@ void fill(HM *hm, int *items) {
 void clear(HM *hm, int *items) {
     for (int i = 0; i < NUM_ITEMS; i++) {
         int num = items[i];
-        remove_item(hm, num);
+        if (remove_item(hm, num) != 0) {
+            fprintf(stderr, "Hashmap did not remove item %d\n", num);
+            exit(1);
+        }
     }
 }
 
@@ -95,7 +93,7 @@ int main(int argc, char **argv) {
     int *items = calloc(NUM_ITEMS, sizeof(int));
     fill(hm, items);
     benchmark(hm);
-
+    
     clear(hm, items);
     free(items);
 
